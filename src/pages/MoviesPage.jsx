@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-const notify = () => toast("Empty! Write something");
 import Loader from "../components/Loader";
 import SearchForm from "../components/SearchForm";
 
 // import { useSearchParams } from "react-router-dom";
-import { fetchMoviesByQuery } from "../Api";
 
 export default function MoviesPage() {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const ownerParam = searchParams.get("owner") ?? "";
+  // const [params, setParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // const changeOwnerFilter = (newFilter) => {
-  //   searchParams.set("owner", newFilter);
-  //   setSearchParams(searchParams);
-  // };
+  // const movieFilter = params.get("movie") ?? "";
+
+  function notify(errMsg) {
+    return toast(errMsg);
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -23,16 +24,31 @@ export default function MoviesPage() {
       .trim();
 
     if (!editedValue) {
-      notify();
+      notify("Empty! Write something");
     }
+
     e.target.reset();
   }
-  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        setError("");
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   return (
-    <div>
-      <SearchForm handleSubmit={handleSubmit} />
+    <>
+      {!error && <SearchForm handleSubmit={handleSubmit} />}
       {isLoading && <Loader />}
-    </div>
+    </>
   );
 }
