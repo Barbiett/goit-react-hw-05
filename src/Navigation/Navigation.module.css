@@ -2,19 +2,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 8px 0;
+  padding: 10px;
   margin-bottom: 16px;
   border-bottom: 1px solid black;
 }
 
 .nav {
   display: flex;
-}
-
-.logo {
-  font-weight: 700;
-  margin: 0;
+  gap: 20px;
 }
 
 .link {
@@ -23,9 +18,10 @@
   text-decoration: none;
   color: black;
   font-weight: 500;
+  font-size: 30px;
 }
 
 .active {
   color: white;
-  background-color: orangered;
+  background-color: blue;
 }
