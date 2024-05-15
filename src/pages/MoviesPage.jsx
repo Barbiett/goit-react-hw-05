@@ -1,54 +1,29 @@
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import Loader from "../components/Loader";
+import { useState } from "react";
 import SearchForm from "../components/SearchForm";
-
-// import { useSearchParams } from "react-router-dom";
+import MovieList from "../components/MovieList";
+import Loader from "../components/Loader";
+import { fetchMoviesByQuery } from "../Api";
 
 export default function MoviesPage() {
-  // const [params, setParams] = useSearchParams();
+  const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  // const movieFilter = params.get("movie") ?? "";
-
-  function notify(errMsg) {
-    return toast(errMsg);
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    const editedValue = e.target.elements.searchInput.value
-      .toLowerCase()
-      .trim();
-
-    if (!editedValue) {
-      notify("Empty! Write something");
+  const handleSubmit = async (query) => {
+    setIsLoading(true);
+    try {
+      const results = await fetchMoviesByQuery(query);
+      setMovies(results);
+    } catch (error) {
+      console.error("Failed to fetch movies", error);
+    } finally {
+      setIsLoading(false);
     }
-
-    e.target.reset();
-  }
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setIsLoading(true);
-        setError("");
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
+  };
 
   return (
-    <>
-      {!error && <SearchForm handleSubmit={handleSubmit} />}
-      {isLoading && <Loader />}
-    </>
+    <div>
+      <SearchForm handleSubmit={handleSubmit} />
+      {isLoading ? <Loader /> : <MovieList movies={movies} />}
+    </div>
   );
 }
