@@ -22,7 +22,9 @@ const MovieCast = () => {
     };
     fetchCast();
   }, [movieId]);
-
+  if (cast.length === 0) {
+    return <p>No movie details available</p>;
+  }
   return (
     <div>
       {isLoading ? (

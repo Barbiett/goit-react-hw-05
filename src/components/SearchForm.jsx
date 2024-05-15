@@ -1,29 +1,34 @@
 import toast, { Toaster } from "react-hot-toast";
-import { useState } from "react";
+
+import { useSearchParams } from "react-router-dom";
 
 const notify = () => toast("Empty! Write something");
 
 export default function SearchForm({ handleSubmit }) {
-  const [searchInput, setSearchInput] = useState("");
+  const [params, setParams] = useSearchParams();
+  const getUrlParams = params ? params.get("input") ?? "" : "";
+  const changeInputFunc = (newValue) => {
+    params.set("input", newValue);
+    setParams(params);
+  };
 
-  const HandleSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (!searchInput.trim()) {
+    if (!getUrlParams.trim()) {
       notify();
       return;
     }
-    handleSubmit(searchInput);
-    setSearchInput("");
+    handleSubmit(getUrlParams);
   };
 
   return (
     <div>
-      <form onSubmit={HandleSubmit}>
+      <form onSubmit={handleFormSubmit}>
         <input
           style={customStyle}
           type="text"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
+          value={getUrlParams}
+          onChange={(e) => changeInputFunc(e.target.value)}
           placeholder="Search movies"
         />
         <button style={buttonStyle} type="submit">

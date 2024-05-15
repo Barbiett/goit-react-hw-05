@@ -8,7 +8,6 @@ const MovieReviews = lazy(() => import("../components/MovieReviews"));
 export default function MovieDetailsPage() {
   const { movieId } = useParams();
   const location = useLocation();
-  const backLinkHref = location.state ?? "/";
 
   const [movie, setMovie] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +37,9 @@ export default function MovieDetailsPage() {
 
   return (
     <div>
-      <Link to={backLinkHref}>Go Back</Link>
+      <Link to={`/movies/${movie}`} state={location}>
+        Go Back
+      </Link>
       <h1>{movie.original_title}</h1>
       {movie.poster_path && (
         <img

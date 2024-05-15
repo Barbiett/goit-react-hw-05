@@ -22,7 +22,9 @@ export default function MovieReviews() {
     };
     fetchReviews();
   }, [movieId]);
-
+  if (reviews.length === 0) {
+    return <p>No movie details available</p>;
+  }
   return (
     <div>
       {isLoading ? (
