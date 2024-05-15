@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense, lazy } from "react";
+import { useEffect, useState, Suspense, lazy, useRef } from "react";
 import { useParams, useLocation, Route, Link, Routes } from "react-router-dom";
 import { fetchMovieDetails } from "../Api";
 import Loader from "../components/Loader";
@@ -8,7 +8,7 @@ const MovieReviews = lazy(() => import("../components/MovieReviews"));
 export default function MovieDetailsPage() {
   const { movieId } = useParams();
   const location = useLocation();
-
+  const backLinkRef = useRef(location.state ?? "/movies");
   const [movie, setMovie] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -37,9 +37,7 @@ export default function MovieDetailsPage() {
 
   return (
     <div>
-      <Link to={`/movies/${movie}`} state={location}>
-        Go Back
-      </Link>
+      <Link to={backLinkRef.current}>Go Back</Link>
       <h1>{movie.original_title}</h1>
       {movie.poster_path && (
         <img
