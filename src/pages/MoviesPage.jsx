@@ -8,14 +8,14 @@ import { fetchMoviesByQuery } from "../Api";
 export default function MoviesPage() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [params, setParams] = useSearchParams();
 
-  const getUrlParams = params ? params.get("input") ?? "" : "";
-
+  const getUrlParams = params.get("query") ?? "";
   const handleSubmit = async (query) => {
     setParams({ query });
+    setError(null);
   };
-
   useEffect(() => {
     const fetchData = async () => {
       if (!getUrlParams) return;
@@ -24,9 +24,15 @@ export default function MoviesPage() {
         setIsLoading(true);
         const results = await fetchMoviesByQuery(getUrlParams);
         setMovies(results);
-        setParams("");
+
+        if (results.length === 0) {
+          setError(true);
+        } else {
+          setError(null);
+        }
       } catch (error) {
         console.error("Failed to fetch movies", error);
+        setError(true);
       } finally {
         setIsLoading(false);
       }
@@ -39,6 +45,7 @@ export default function MoviesPage() {
     <div>
       <SearchForm handleSubmit={handleSubmit} />
       {isLoading ? <Loader /> : <MovieList movies={movies} />}
+      {error && <p>{"No films on your request! Try another one!"}</p>}
     </div>
   );
 }

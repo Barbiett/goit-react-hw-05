@@ -6,12 +6,9 @@ const notify = () => toast("Empty! Write something");
 export default function SearchForm({ handleSubmit }) {
   const [params, setParams] = useState("");
 
-  const changeInputFunc = (newValue) => {
-    if (params) {
-      params.set("input", newValue);
-      setParams(params);
-      console.log(newValue);
-    }
+  const changeInputFunc = (e) => {
+    const query = e.target.value;
+    setParams(query);
   };
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -30,8 +27,7 @@ export default function SearchForm({ handleSubmit }) {
         <input
           style={customStyle}
           type="text"
-          placeholder="Search movies"
-          // onChange={(e) => changeInputFunc(e.target.value)}
+          placeholder="Search movies/"
           onChange={changeInputFunc}
         />
         <button style={buttonStyle} type="submit">
